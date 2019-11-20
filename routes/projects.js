@@ -80,7 +80,8 @@ router.put('/:id/update', isLoggedIn(), async (req, res, next) => {
   const user = req.session.currentUser;
   const {
     name,
-    description
+    description,
+    imageURL
   } = req.body;
   try {
     // TODO: Check for a better way to Find and then Update if the condition is true
@@ -90,7 +91,8 @@ router.put('/:id/update', isLoggedIn(), async (req, res, next) => {
       const updateProject = await Project.findByIdAndUpdate(id, {
         $set: {
           name: name,
-          description: description
+          description: description,
+          image: imageURL
         }
       }, {
         new: true
