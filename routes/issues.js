@@ -286,7 +286,7 @@ router.put('/:id/update', isLoggedIn(), async (req, res, next) => {
     project,
     priority,
     status,
-    images
+    attachments
   } = req.body;
   try {
     // TODO: Check for a better way to Find and then Update if the condition is true
@@ -302,11 +302,12 @@ router.put('/:id/update', isLoggedIn(), async (req, res, next) => {
           status: status
         },
         $push: {
-          images: images
+          attachments: attachments
         }
       }, {
         new: true
       });
+      console.log(updateIssue)
       res.status(200).json(updateIssue);
       return;
     } else {
