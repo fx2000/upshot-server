@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const User = require('../models/User');
+const moment = require('moment');
 
 // Middlewares
 const {
@@ -13,7 +14,7 @@ router.get('/', isLoggedIn(), async (req, res, next) => {
   try {
     const projects = await Project.find({
         deleted: false
-      })
+      }).lean()
       .populate('creator')
       .populate({
         path: 'issues',
@@ -21,6 +22,10 @@ router.get('/', isLoggedIn(), async (req, res, next) => {
           deleted: false
         }
       });
+    projects.forEach(project => {
+      project.relativeDate = moment(project.createdAt).fromNow();
+      project.creationDate = moment(project.createdAt).format('YYYY-DD-MM');
+    })
     res.status(200).json(projects);
     return;
   } catch (error) {
@@ -138,7 +143,7 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
   try {
     const project = await Project.findById(id, {
         deleted: false
-      })
+      }).lean()
       .populate({
         path: 'creator',
         match: {
@@ -147,10 +152,15 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
       })
       .populate({
         path: 'issues',
+        populate: {
+          path: 'creator'
+        },
         match: {
           deleted: false
         }
       });
+    project.relativeDate = moment(project.createdAt).fromNow();
+    project.creationDate = moment(project.createdAt).format('YYYY-DD-MM');
     res.status(200).json(project);
     return;
   } catch (error) {

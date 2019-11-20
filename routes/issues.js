@@ -4,6 +4,7 @@ const Issue = require('../models/Issue');
 const Project = require('../models/Project');
 const Comment = require('../models/Comment');
 const User = require('../models/User');
+const moment = require('moment');
 
 // Middlewares
 const {
@@ -15,7 +16,7 @@ router.get('/', isLoggedIn(), async (req, res, next) => {
   try {
     const issues = await Issue.find({
         deleted: false
-      })
+      }).lean()
       .populate({
         path: 'project',
         match: {
@@ -46,6 +47,10 @@ router.get('/', isLoggedIn(), async (req, res, next) => {
           deleted: false
         }
       });
+    issues.forEach(issue => {
+      issue.relativeDate = moment(issue.createdAt).fromNow();
+      issue.creationDate = moment(issue.createdAt).format('YYYY-DD-MM');
+    })
     res.status(200).json(issues);
     return;
   } catch (error) {
@@ -380,7 +385,7 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
   try {
     const issue = await Issue.findById(id, {
         deleted: false
-      })
+      }).lean()
       .populate({
         path: 'project',
         match: {
@@ -414,6 +419,8 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
           deleted: false
         }
       });
+    issue.relativeDate = moment(issue.createdAt).fromNow();
+    issue.creationDate = moment(issue.createdAt).format('YYYY-DD-MM');
     res.status(200).json(issue);
     return;
   } catch (error) {
