@@ -40,15 +40,17 @@ router.post('/create', isLoggedIn(), async (req, res, next) => {
     description,
     imageURL
   } = req.body;
-  console.log(req.body);
   const user = req.session.currentUser;
   try {
     const newProjectDetails = {
       name: name,
       description: description,
-      creator: user._id,
-      image: imageURL
+      creator: user._id
     };
+    // Check for custom project image
+    if (imageURL !== '') {
+      newProjectDetails.image = imageURL;
+    }
     // Check if the name is taken by an active project
     const projectExists = await Project.findOne({
       name: name,
