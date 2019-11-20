@@ -108,6 +108,9 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
       }).lean()
       .populate({
         path: 'issues',
+        populate: {
+          path: 'project'
+        },
         match: {
           deleted: false
         }
@@ -138,6 +141,18 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
       });
     user.relativeDate = moment(user.createdAt).fromNow();
     user.creationDate = moment(user.createdAt).format('YYYY-DD-MM');
+    user.comments.forEach(comment => {
+      comment.relativeDate = moment(comment.createdAt).fromNow();
+      comment.creationDate = moment(comment.createdAt).format('YYYY-DD-MM');
+    })
+    user.issues.forEach(issue => {
+      issue.relativeDate = moment(issue.createdAt).fromNow();
+      issue.creationDate = moment(issue.createdAt).format('YYYY-DD-MM');
+    })
+    user.projects.forEach(project => {
+      project.relativeDate = moment(project.createdAt).fromNow();
+      project.creationDate = moment(project.createdAt).format('YYYY-DD-MM');
+    })
     res.status(200).json(user);
     return;
   } catch (error) {
