@@ -67,6 +67,7 @@ router.post('/create', isLoggedIn(), async (req, res, next) => {
     priority,
     attachments
   } = req.body;
+  console.log(req.body);
   const user = req.session.currentUser;
   try {
     const newIssueDetails = {
