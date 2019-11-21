@@ -123,6 +123,9 @@ router.get('/:id', isLoggedIn(), async (req, res, next) => {
       })
       .populate({
         path: 'comments',
+        populate: {
+          path: 'issue'
+        },
         match: {
           deleted: false
         }

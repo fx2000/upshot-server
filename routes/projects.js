@@ -25,7 +25,7 @@ router.get('/', isLoggedIn(), async (req, res, next) => {
     projects.forEach(project => {
       project.relativeDate = moment(project.createdAt).fromNow();
       project.creationDate = moment(project.createdAt).format('YYYY-DD-MM');
-    })
+    });
     res.status(200).json(projects);
     return;
   } catch (error) {
