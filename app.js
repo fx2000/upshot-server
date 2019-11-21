@@ -16,6 +16,7 @@ const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const issuesRouter = require('./routes/issues');
 const projectsRouter = require('./routes/projects');
+const chartsRouter = require('./routes/charts');
 
 // Open database connection
 mongoose
@@ -70,6 +71,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/issues', issuesRouter);
 app.use('/api/projects', projectsRouter);
+app.use('/api/charts', chartsRouter);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
